@@ -15,6 +15,15 @@ export function middleware(req: NextRequest) {
   }
   const parts = pathname.split("/").filter(Boolean);
   const locale = parts[0];
+  if ((locale && locales.includes(locale) && pathname === `/${locale}/login`) 
+    || (locale && locales.includes(locale) && pathname === `/${locale}/signup`)) {
+    const token = req.cookies.get("access_token")?.value;
+    if (token) {
+      const url = req.nextUrl.clone();
+      url.pathname = `/${locale}`;
+      return NextResponse.redirect(url);
+    }
+  }
   if (!locale || !locales.includes(locale)) {
     const url = req.nextUrl.clone();
     url.pathname = `/${defaultLocale}${pathname.startsWith("/") ? pathname : `/${pathname}`}`;
