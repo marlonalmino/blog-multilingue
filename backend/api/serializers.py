@@ -31,9 +31,14 @@ class TagLocaleSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    user_username = serializers.SerializerMethodField()
+
     class Meta:
         model = Comment
-        fields = ("id", "post", "user", "parent", "body", "status", "spam_score", "created_at")
+        fields = ("id", "post", "user", "user_username", "parent", "body", "status", "spam_score", "created_at")
+
+    def get_user_username(self, obj):
+        return obj.user.username if obj.user else None
 
 
 class MediaAssetSerializer(serializers.ModelSerializer):

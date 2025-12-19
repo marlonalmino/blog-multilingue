@@ -10,6 +10,8 @@ from rest_framework import status
 from accounts.models import AuthToken
 from accounts.utils import generate_access_token, generate_refresh_token, _hash_token, decode_token
 from django.contrib.auth import get_user_model
+import logging
+logger = logging.getLogger(__name__)
 
 
 def _cookie_kwargs():
@@ -89,6 +91,7 @@ class MeView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        logger.info("MeView user_id=%s", getattr(request.user, "id", None))
         user = request.user
         roles = list(user.userrole_set.values_list("role__name", flat=True))
         return Response({"id": user.id, "username": user.username, "email": user.email, "roles": roles})

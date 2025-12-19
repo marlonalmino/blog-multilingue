@@ -3,12 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 import { fetchFeed, type FeedItem, type Paginated } from "../lib/api";
 import PostCard from "./PostCard";
+import { getDictionary, Locale } from "../lib/i18n";
 
 export default function Feed({ initial, locale }: { initial: Paginated<FeedItem>; locale: string }) {
   const [data, setData] = useState<Paginated<FeedItem>>(initial);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const sentinel = useRef<HTMLDivElement | null>(null);
+  const dict = getDictionary(locale as Locale);
   useEffect(() => {
     setData(initial);
   }, [initial]);
@@ -42,10 +44,10 @@ export default function Feed({ initial, locale }: { initial: Paginated<FeedItem>
       {data.results.map((item) => (
         <PostCard key={`${item.post}-${item.slug_locale}`} item={item} locale={locale} />
       ))}
-      {error && <div className="text-sm text-red-600">Erro ao carregar mais</div>}
+      {error && <div className="text-sm text-red-600">{dict.feed.loadMoreError}</div>}
       <div ref={sentinel} />
-      {loading && <div className="text-sm text-zinc-500">Carregando...</div>}
-      {!data.next && <div className="py-4 text-center text-sm text-zinc-500">Fim</div>}
+      {loading && <div className="text-sm text-zinc-500">{dict.common.loading}</div>}
+      {!data.next && <div className="py-4 text-center text-sm text-zinc-500">{dict.feed.end}</div>}
     </div>
   );
 }

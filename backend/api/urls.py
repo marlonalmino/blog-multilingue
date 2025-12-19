@@ -3,7 +3,8 @@ from rest_framework.routers import DefaultRouter
 from .views import (
     PostViewSet, PostLocaleViewSet,
     CategoryLocaleViewSet, TagLocaleViewSet,
-    CommentViewSet, MediaAssetViewSet
+    CommentViewSet, MediaAssetViewSet,
+    PostManageViewSet, PostLocaleManageViewSet
 )
 from .auth_views import LoginView, RefreshView, LogoutView, MeView, CsrfTokenView, RegisterView
 from .views_media import MediaUploadView
@@ -12,6 +13,8 @@ from .views_extra import FeedView, PostBySlugView, NavigationView, RelatedView, 
 router = DefaultRouter()
 router.register(r'posts', PostViewSet, basename='posts')
 router.register(r'post-locales', PostLocaleViewSet, basename='post-locales')
+router.register(r'my-posts', PostManageViewSet, basename='my-posts')
+router.register(r'my-post-locales', PostLocaleManageViewSet, basename='my-post-locales')
 router.register(r'categories', CategoryLocaleViewSet, basename='categories')
 router.register(r'tags', TagLocaleViewSet, basename='tags')
 router.register(r'comments', CommentViewSet, basename='comments')

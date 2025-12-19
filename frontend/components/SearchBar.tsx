@@ -3,12 +3,14 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { fetchSuggest } from "../lib/api";
 import Input from "./ui/Input";
 import Link from "next/link";
+import { getDictionary, Locale } from "../lib/i18n";
 
 export default function SearchBar({ locale, onSearch }: { locale: string; onSearch: (q: string) => void }) {
   const [q, setQ] = useState("");
   const [items, setItems] = useState<{ title: string; slug: string }[]>([]);
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
+  const dict = getDictionary(locale as Locale);
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
@@ -52,22 +54,26 @@ export default function SearchBar({ locale, onSearch }: { locale: string; onSear
             </Link>
           ))
         ) : (
-          <div className="px-2 py-1 text-sm text-zinc-500">Sem sugestões</div>
+          <div className="px-2 py-1 text-sm text-zinc-500">{dict.search.noSuggestions}</div>
         )}
       </div>
     ),
-    [items, locale]
+    [items, locale, dict.search.noSuggestions]
   );
   return (
     <div ref={ref} className="relative">
-      <form onSubmit={onSubmit} className="flex gap-2">
-        <Input label="Buscar" value={q} onChange={(e) => setQ(e.target.value)} />
-        <button className="rounded bg-zinc-900 px-3 py-2 text-white dark:bg-zinc-100 dark:text-zinc-900" type="submit">
-          Buscar
+      <form onSubmit={onSubmit} className="flex items-end gap-2">
+        <div className="flex-1">
+          <Input label={dict.search.label} value={q} onChange={(e) => setQ(e.target.value)} />
+        </div>
+        <button
+          className="inline-flex h-9 items-center justify-center rounded-md border border-zinc-300 bg-white px-3 text-sm text-zinc-900 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
+          type="submit"
+        >
+          {dict.search.button}
         </button>
       </form>
       {open && dropdown}
     </div>
   );
 }
-

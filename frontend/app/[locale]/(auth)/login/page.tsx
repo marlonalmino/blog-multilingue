@@ -3,21 +3,13 @@ import { useState } from "react";
 import Input from "../../../../components/ui/Input";
 import Button from "../../../../components/ui/Button";
 import { getDictionary, Locale } from "../../../../lib/i18n";
-import { getCsrf, login, notifyAuthChanged, me } from "../../../../lib/auth";
+import { getCsrf, login, notifyAuthChanged } from "../../../../lib/auth";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
 
 export default function LoginPage() {
   const pathname = usePathname();
   const locale = (pathname.split("/")[1] ?? "pt") as Locale;
   const dict = getDictionary(locale);
-  useEffect(() => {
-    me()
-      .then(() => {
-        window.location.assign(`/${locale}`);
-      })
-      .catch(() => {});
-  }, [locale]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);

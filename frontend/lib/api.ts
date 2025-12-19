@@ -107,6 +107,7 @@ export type CommentItem = {
   id: number;
   post: number;
   user: number | null;
+  user_username?: string | null;
   parent: number | null;
   body: string;
   status: string;
@@ -134,5 +135,121 @@ export async function createComment(payload: { postId: number; body: string; use
   });
   if (!res.ok) throw new Error("comment_create_failed");
   return res.json();
+}
+
+// Posts CRUD (ownership)
+export type Post = {
+  id: number;
+  slug_base: string;
+  status: string;
+  published_at: string | null;
+  canonical_url: string;
+  is_featured: boolean;
+  author: number | null;
+  cover_media: number | null;
+};
+
+export async function fetchMyPosts(cookieHeader?: string): Promise<Post[]> {
+  const res = await fetch(`${API_BASE}/my-posts/`, {
+    credentials: "include",
+    headers: cookieHeader ? { cookie: cookieHeader } : undefined,
+  });
+  if (!res.ok) throw new Error("my_posts_failed");
+  const json = await res.json();
+  if (Array.isArray(json)) return json as Post[];
+  if (json && Array.isArray(json.results)) return json.results as Post[];
+  return [];
+}
+
+export async function createPost(payload: { slug_base: string; status?: string; canonical_url?: string; is_featured?: boolean }) {
+  const res = await fetch(`${API_BASE}/my-posts/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new Error("post_create_failed");
+  return res.json();
+}
+
+export async function fetchMyPost(id: number, cookieHeader?: string): Promise<Post> {
+  const res = await fetch(`${API_BASE}/my-posts/${id}/`, {
+    credentials: "include",
+    headers: cookieHeader ? { cookie: cookieHeader } : undefined,
+  });
+  if (!res.ok) throw new Error("my_post_failed");
+  return res.json();
+}
+
+export async function updatePost(
+  id: number,
+  payload: Partial<{ slug_base: string; status: string; canonical_url: string; is_featured: boolean; published_at: string | null; cover_media: number | null }>
+) {
+  const res = await fetch(`${API_BASE}/my-posts/${id}/`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new Error("post_update_failed");
+  return res.json();
+}
+
+export async function deletePost(id: number) {
+  const res = await fetch(`${API_BASE}/my-posts/${id}/`, { method: "DELETE", credentials: "include" });
+  if (!res.ok) throw new Error("post_delete_failed");
+  return true;
+}
+
+// PostLocale CRUD (ownership)
+export type PostLocaleItem = {
+  id: number;
+  post: number;
+  locale: string;
+  title: string;
+  summary: string;
+  body_md: string;
+  body_html: string;
+  slug_locale: string;
+};
+
+export async function fetchMyPostLocales(cookieHeader?: string): Promise<PostLocaleItem[]> {
+  const res = await fetch(`${API_BASE}/my-post-locales/`, {
+    credentials: "include",
+    headers: cookieHeader ? { cookie: cookieHeader } : undefined,
+  });
+  if (!res.ok) throw new Error("my_post_locales_failed");
+  const json = await res.json();
+  if (Array.isArray(json)) return json as PostLocaleItem[];
+  if (json && Array.isArray(json.results)) return json.results as PostLocaleItem[];
+  return [];
+}
+
+export async function createPostLocale(payload: Omit<PostLocaleItem, "id">) {
+  const res = await fetch(`${API_BASE}/my-post-locales/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new Error("postlocale_create_failed");
+  return res.json();
+}
+
+export async function updatePostLocale(id: number, payload: Partial<PostLocaleItem>) {
+  const res = await fetch(`${API_BASE}/my-post-locales/${id}/`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new Error("postlocale_update_failed");
+  return res.json();
+}
+
+export async function deletePostLocale(id: number) {
+  const res = await fetch(`${API_BASE}/my-post-locales/${id}/`, { method: "DELETE", credentials: "include" });
+  if (!res.ok) throw new Error("postlocale_delete_failed");
+  return true;
 }
 

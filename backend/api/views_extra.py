@@ -6,6 +6,8 @@ from django.db.models import Q, Count
 from blog.models import PostLocale, PostStatus
 from taxonomy.models import CategoryLocale, TagLocale
 from .serializers import FeedItemSerializer, PostLocaleDetailSerializer
+import logging
+logger = logging.getLogger(__name__)
 
 
 class FeedView(APIView):
@@ -13,6 +15,7 @@ class FeedView(APIView):
 
     def get(self, request):
         locale = request.query_params.get("locale")
+        logger.info("FeedView locale=%s user_auth=%s", locale, getattr(request.user, "is_authenticated", False))
         if not locale:
             return Response({"detail": "locale_required"}, status=400)
         qs = PostLocale.objects.select_related("post", "post__cover_media").filter(locale=locale, post__status=PostStatus.PUBLISHED)
@@ -57,6 +60,7 @@ class NavigationView(APIView):
 
     def get(self, request):
         locale = request.query_params.get("locale")
+        logger.info("NavigationView locale=%s", locale)
         if not locale:
             return Response({"detail": "locale_required"}, status=400)
         cats = CategoryLocale.objects.filter(locale=locale).annotate(
