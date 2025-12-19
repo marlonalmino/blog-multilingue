@@ -19,19 +19,23 @@ export default function FeedShell({
   const [tag, setTag] = useState<string | null>(null);
   const [current, setCurrent] = useState<Paginated<FeedItem>>(initial);
   const [loading, setLoading] = useState(false);
+  const params = useMemo(
+    () => ({ locale, q: q || undefined, category: category || undefined, tag: tag || undefined }),
+    [locale, q, category, tag]
+  );
   const queryKey = useMemo(() => `${locale}|${q}|${category || ""}|${tag || ""}`, [locale, q, category, tag]);
   useEffect(() => {
     const load = async () => {
       setLoading(true);
       try {
-        const data = await fetchFeed({ locale, q: q || undefined, category: category || undefined, tag: tag || undefined });
+        const data = await fetchFeed(params);
         setCurrent(data);
       } finally {
         setLoading(false);
       }
     };
     load();
-  }, [queryKey, locale, q, category, tag]);
+  }, [queryKey, params]);
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-[1fr_280px]">
       <div className="space-y-4">
