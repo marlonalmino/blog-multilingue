@@ -6,6 +6,11 @@ This repository contains a multilingual blog platform built with:
 - Backend: Django, Django REST Framework, python-decouple, django-filter
 - Database: PostgreSQL
 
+## Project Preview
+![English Preview](image-en.png)
+![Spanish Preview](image-es.png)
+![Portuguese Preview](image-pt.png)
+
 ## Stack
 - Next.js 16, React 19, TypeScript 5, Tailwind CSS 4
 - Django 5.x, Django REST Framework 3.x
