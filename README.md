@@ -7,8 +7,13 @@ This repository contains a multilingual blog platform built with:
 - Database: PostgreSQL
 
 ## Project Preview
+### English UI
 ![English Preview](image-en.png)
+
+### Spanish UI
 ![Spanish Preview](image-es.png)
+
+### Portuguese UI
 ![Portuguese Preview](image-pt.png)
 
 ## Stack

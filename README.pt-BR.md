@@ -7,8 +7,13 @@ Este repositório contém uma plataforma de blog multilíngue construída com:
 - Banco de dados: PostgreSQL
 
 ## Imagens de Apresentação
+### Interface em Inglês
 ![Prévia em Inglês](image-en.png)
+
+### Interface em Espanhol
 ![Prévia em Espanhol](image-es.png)
+
+### Interface em Português
 ![Prévia em Português](image-pt.png)
 
 ## Stack
@@ -112,4 +117,3 @@ Frontend em `http://localhost:3000`.
 ## Observações
 - O CORS por padrão permite `http://localhost:3000` para o frontend. Ajuste `CORS_ALLOWED_ORIGINS` se usar outro host/porta.
 - Se o PostgreSQL não estiver instalado, instale e garanta que `psql` esteja no PATH.
-
